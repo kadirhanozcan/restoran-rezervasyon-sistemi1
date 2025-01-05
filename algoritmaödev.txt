@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <string.h>
+
+int masaNumaralari[10];
+char tarihler[10][11];
+char saatler[10][6];
+char musteriAdlari[10][50];
+int rezervasyonSayisi = 0;
+
+void rezervasyonYap() {
+    int masaNumarasi;
+    char tarih[11], saat[6], musteriAdi[50];
+    int i, uygun = 1;
+
+    if (rezervasyonSayisi >= 10) {
+        printf("Maksimum rezervasyon sayısına ulaşıldı.\n");
+        return;
+    }
+
+    printf("Masa numarası girin (1-5): ");
+    scanf("%d", &masaNumarasi);
+
+    if (masaNumarasi < 1 || masaNumarasi > 5) {
+        printf("Geçersiz masa numarası.\n");
+        return;
+    }
+
+    printf("Tarih girin (YYYY-MM-DD): ");
+    scanf("%s", tarih);
+
+    printf("Saat girin (HH:MM): ");
+    scanf("%s", saat);
+
+    for (i = 0; i < rezervasyonSayisi; i++) {
+        if (masaNumaralari[i] == masaNumarasi && 
+            strcmp(tarihler[i], tarih) == 0 && 
+            strcmp(saatler[i], saat) == 0) {
+            uygun = 0;
+            break;
+        }
+    }
+
+    if (!uygun) {
+        printf("Bu masa belirtilen tarihte ve saatte dolu.\n");
+        return;
+    }
+
+    printf("Müşteri adını girin: ");
+    scanf(" %[^\n]", musteriAdi);
+
+    masaNumaralari[rezervasyonSayisi] = masaNumarasi;
+    strcpy(tarihler[rezervasyonSayisi], tarih);
+    strcpy(saatler[rezervasyonSayisi], saat);
+    strcpy(musteriAdlari[rezervasyonSayisi], musteriAdi);
+    rezervasyonSayisi++;
+
+    printf("Rezervasyon başarıyla oluşturuldu!\n");
+}
+
+void rezervasyonlariGoster() {
+    int i;
+
+    if (rezervasyonSayisi == 0) {
+        printf("Hiç rezervasyon bulunmamaktadır.\n");
+        return;
+    }
+
+    printf("\n--- Rezervasyonlar ---\n");
+    for (i = 0; i < rezervasyonSayisi; i++) {
+        printf("Masa: %d | Tarih: %s | Saat: %s | Müşteri: %s\n", 
+               masaNumaralari[i], tarihler[i], saatler[i], musteriAdlari[i]);
+    }
+}
+
+int main() {
+    int secim;
+
+    while (1) {
+        printf("\n1. Rezervasyon Yap\n");
+        printf("2. Rezervasyonları Görüntüle\n");
+        printf("3. Çıkış\n");
+        printf("Seçiminizi yapın: ");
+        scanf("%d", &secim);
+
+        if (secim == 1) {
+            rezervasyonYap();
+        } else if (secim == 2) {
+            rezervasyonlariGoster();
+        } else if (secim == 3) {
+            printf("Çıkış yapılıyor...\n");
+            break;
+        } else {
+            printf("Geçersiz seçim, tekrar deneyin.\n");
+        }
+    }
+
+    return 0;
+}
+
